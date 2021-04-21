@@ -42,74 +42,101 @@ namespace Trainline
             int Cvalue = 230;
             int set = 0;
             int min = 0;
-            int hour = 8;
+            int hour = 14;
+            int days = 0;
             string[] gameState = { "intro", "main", "info", "win" };
             string select = gameState[0];
 
-            Raylib.InitWindow(800, 600, "Trainline");
-            Raylib.SetTargetFPS(60);
+            Raylib.InitWindow(1200, 1000, "Trainline");
+            Raylib.SetTargetFPS(30);
 
             while (!Raylib.WindowShouldClose())
             {
-                if (select == gameState[0])
+                switch (select)
                 {
-                    Color timeOfDay = new Color(Cvalue, Cvalue, Cvalue, 150);
-                    Raylib.BeginDrawing();
-                    if (time < 720)
-                    {
-                        if (set == 5)
+                    case "intro":
+                        Color timeOfDay = new Color(Cvalue, 230, Cvalue, 150);
+                        Raylib.BeginDrawing();
+                        switch (time)
                         {
-                            Cvalue--;
+
+                        }
+                        if (time < 720)
+                        {
+                            if (set == 5)
+                            {
+                                Cvalue--;
+                                set = 0;
+                            }
+                            Raylib.ClearBackground(timeOfDay);
+                        }
+                        else if (time >= 720 && time < 1440)
+                        {
+                            if (set == 5)
+                            {
+                                Cvalue++;
+                                set = 0;
+                            }
+                            Raylib.ClearBackground(timeOfDay);
+                        }
+                        if (time > 1440)
+                        {
+                            time = 0;
                             set = 0;
                         }
-                        Raylib.ClearBackground(timeOfDay);
-                    }
-                    else if (time >= 720 && time < 1440)
-                    {
+                        List<string> Namn = new List<string>();
+                        Raylib.DrawRectangle(0, 900, 1200, 100, Color.BLACK);
+
+                        Raylib.DrawCircle(100, 100, 100, Color.MAGENTA);
+                        set++;
+                        time++;
                         if (set == 5)
                         {
-                            Cvalue++;
-                            set = 0;
+                            min = min + 5;
                         }
-                        Raylib.ClearBackground(timeOfDay);
-                    }
-                    if (time > 1440)
-                    {
-                        time = 0;
-                        set = 0;
-                    }
-                    List<string> Namn = new List<string>();
+                        if (min > 55)
+                        {
+                            min = 0;
+                            hour++;
+                        }
+                        if (hour > 23)
+                        {
+                            hour = 0;
+                            days++;
+                        }
+                        if (min == 0 || min == 5)
+                        {
+                            if (hour <= 9)
+                            {
 
-                    Raylib.DrawCircle(100, 100, 100, Color.MAGENTA);
-                    Raylib.DrawText(hour + ":" + min, 500, 500, 20, Color.ORANGE);
-                    set++;
-                    time++;
-                    if (set == 5)
-                    {
-                        min = min + 5;
-                    }
-                    if (min > 60)
-                    {
-                        min = 0;
-                        hour++;
-                    }
-                    if (hour > 23)
-                    {
-                        hour = 0;
-                    }
-                    Raylib.DrawFPS(50, 50);
-                    Raylib.EndDrawing();
-                }
-                else if (select == gameState[1])
-                {
-                    Raylib.BeginDrawing();
+                                Raylib.DrawText("Day " + days + ", Clock 0" + hour + ":0" + min, 800, 900, 40, Color.GREEN);
+                            }
+                            else
+                            {
+                                Raylib.DrawText("Day " + days + ", Clock " + hour + ":0" + min, 800, 900, 40, Color.GREEN);
+                            }
+                        }
+                        else if (hour <= 9)
+                        {
+                            Raylib.DrawText("Day " + days + ", Clock 0" + hour + ":" + min, 800, 900, 40, Color.GREEN);
+                        }
+                        else
+                        {
+                            Raylib.DrawText("Day " + days + ", Clock " + hour + ":" + min, 800, 900, 40, Color.GREEN);
+                        }
+                        Raylib.DrawFPS(50, 50);
+                        Raylib.EndDrawing();
+                        break;
 
-                    Raylib.ClearBackground(Color.WHITE);
-                    List<string> Namn = new List<string>();
+                    case "main":
+                        Raylib.BeginDrawing();
 
-                    Raylib.DrawCircle(100, 100, 100, Color.BLUE);
+                        Raylib.ClearBackground(Color.WHITE);
 
-                    Raylib.EndDrawing();
+                        Raylib.DrawCircle(100, 100, 100, Color.BLUE);
+
+                        Raylib.EndDrawing();
+                        break;
                 }
             }
         }
