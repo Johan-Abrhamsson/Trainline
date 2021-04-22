@@ -44,10 +44,12 @@ namespace Trainline
             int min = 0;
             int hour = 14;
             int days = 0;
+            int width = 1200;
+            int height = 1000;
             string[] gameState = { "intro", "main", "info", "win" };
             string select = gameState[0];
 
-            Raylib.InitWindow(1200, 1000, "Trainline");
+            Raylib.InitWindow(width, height, "Trainline");
             Raylib.SetTargetFPS(30);
 
             while (!Raylib.WindowShouldClose())
@@ -55,6 +57,18 @@ namespace Trainline
                 switch (select)
                 {
                     case "intro":
+                        //Rectangle rec = (width / 2) - 300, 250, 550, 60;
+                        Raylib.BeginDrawing();
+                        Raylib.ClearBackground(Color.WHITE);
+                        Raylib.DrawText("Trainline", width / 2 - 300, 50, 120, Color.BLACK);
+                        //Raylib.DrawRectangleRounded(rec, 20, 20, Color.BLACK);
+                        Raylib.DrawText("Start", width / 2 - 120, 250, 60, Color.WHITE);
+
+
+                        Raylib.EndDrawing();
+                        break;
+
+                    case "main":
                         Color timeOfDay = new Color(Cvalue, 230, Cvalue, 150);
                         Raylib.BeginDrawing();
                         switch (time)
@@ -128,7 +142,7 @@ namespace Trainline
                         Raylib.EndDrawing();
                         break;
 
-                    case "main":
+                    case "info":
                         Raylib.BeginDrawing();
 
                         Raylib.ClearBackground(Color.WHITE);
