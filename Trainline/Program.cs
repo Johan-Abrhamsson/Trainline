@@ -46,7 +46,7 @@ namespace Trainline
             int days = 0;
             int width = 1200;
             int height = 1000;
-            string[] gameState = { "intro", "main", "info", "win" };
+            string[] gameState = { "intro", "main", "info", "settings", "win" };
             string select = gameState[0];
 
             Raylib.InitWindow(width, height, "Trainline");
@@ -57,12 +57,19 @@ namespace Trainline
                 switch (select)
                 {
                     case "intro":
-                        //Rectangle rec = (width / 2) - 300, 250, 550, 60;
+
                         Raylib.BeginDrawing();
                         Raylib.ClearBackground(Color.WHITE);
                         Raylib.DrawText("Trainline", width / 2 - 300, 50, 120, Color.BLACK);
-                        //Raylib.DrawRectangleRounded(rec, 20, 20, Color.BLACK);
-                        Raylib.DrawText("Start", width / 2 - 120, 250, 60, Color.WHITE);
+                        Raylib.DrawRectangle(width / 2 - 120, height / 2 - 120, 220, 100, Color.BLACK);
+                        Raylib.DrawText("Start", width / 2 - 100, height / 2 - 100, 60, Color.WHITE);
+                        mousePos = Raylib.GetMousePosition();
+                        Vector2 startPosMin = new Vector2(width / 2 - 120, height / 2 - 120);
+                        Vector2 startPosMax = new Vector2(width / 2 + 100, height / 2 - 20);
+                        if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) == true && mousePos.X >= startPosMin.X && mousePos.Y >= startPosMin.Y && mousePos.X <= startPosMax.X && mousePos.Y <= startPosMax.Y)
+                        {
+                            select = gameState[1];
+                        }
 
 
                         Raylib.EndDrawing();
@@ -71,10 +78,6 @@ namespace Trainline
                     case "main":
                         Color timeOfDay = new Color(Cvalue, 230, Cvalue, 150);
                         Raylib.BeginDrawing();
-                        switch (time)
-                        {
-
-                        }
                         if (time < 720)
                         {
                             if (set == 5)
@@ -100,8 +103,6 @@ namespace Trainline
                         }
                         List<string> Namn = new List<string>();
                         Raylib.DrawRectangle(0, 900, 1200, 100, Color.BLACK);
-
-                        Raylib.DrawCircle(100, 100, 100, Color.MAGENTA);
                         set++;
                         time++;
                         if (set == 5)
@@ -153,6 +154,10 @@ namespace Trainline
                         break;
                 }
             }
+        }
+        void trainmove(Train, Track)
+        {
+
         }
     }
 }
