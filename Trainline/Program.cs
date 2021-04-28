@@ -7,13 +7,13 @@ namespace Trainline
 {
     class Train
     {
-        private string name = "";
+        public string name = "";
 
-        private int[] storage = new int[0];
+        public int[] storage = new int[0];
 
-        private float speed = 0.01f;
+        public float speed = 0.01f;
 
-        private int cost = 0;
+        public int cost = 0;
     }
     class city
     {
@@ -24,14 +24,27 @@ namespace Trainline
         private int Pop = 0;
         private int level = 0;
     }
+    class Stop
+    {
+        public int x = 0;
+        public int y = 0;
+        public int order = 0;
+    }
     class Track
     {
-        private string name = "";
-        private int x = 0;
-        private int y = 0;
-        private List<int> order = new List<int>();
+        public string name = "";
+        public int size = 10;
 
-        private int size = 10;
+        private int orderNumber = 0;
+        private List<Stop> stopOrder = new List<Stop>();
+
+        public Stop OrderAdd(int xStop, int yStop)
+        {
+            orderNumber++;
+            stopOrder.Add(new Stop { x = xStop, y = yStop, order = orderNumber });
+            Stop w = new Stop();
+            return w;
+        }
     }
     class Program
     {
@@ -39,7 +52,7 @@ namespace Trainline
         {
             Vector2 mousePos = Raylib.GetMousePosition();
             int time = 0;
-            int Cvalue = 230;
+            int Cvalue = 220;
             int set = 0;
             int min = 0;
             int hour = 14;
@@ -48,6 +61,7 @@ namespace Trainline
             int height = 1000;
             string[] gameState = { "intro", "main", "info", "settings", "win" };
             string select = gameState[0];
+            Color timeOfDay = new Color(Cvalue, Cvalue, Cvalue - 60, 150);
 
             Raylib.InitWindow(width, height, "Trainline");
             Raylib.SetTargetFPS(30);
@@ -59,16 +73,24 @@ namespace Trainline
                     case "intro":
 
                         Raylib.BeginDrawing();
-                        Raylib.ClearBackground(Color.WHITE);
+                        Raylib.ClearBackground(timeOfDay);
                         Raylib.DrawText("Trainline", width / 2 - 300, 50, 120, Color.BLACK);
                         Raylib.DrawRectangle(width / 2 - 120, height / 2 - 120, 220, 100, Color.BLACK);
                         Raylib.DrawText("Start", width / 2 - 100, height / 2 - 100, 60, Color.WHITE);
+                        Raylib.DrawRectangle(width / 2 - 150, height / 2, 300, 100, Color.BLACK);
+                        Raylib.DrawText("Settings", width / 2 - 130, height / 2 + 20, 60, Color.WHITE);
                         mousePos = Raylib.GetMousePosition();
                         Vector2 startPosMin = new Vector2(width / 2 - 120, height / 2 - 120);
                         Vector2 startPosMax = new Vector2(width / 2 + 100, height / 2 - 20);
+                        Vector2 settingsPosMin = new Vector2(width / 2 - 150, height / 2);
+                        Vector2 settingsPosMax = new Vector2(width / 2 + 150, height / 2 + 120);
                         if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) == true && mousePos.X >= startPosMin.X && mousePos.Y >= startPosMin.Y && mousePos.X <= startPosMax.X && mousePos.Y <= startPosMax.Y)
                         {
                             select = gameState[1];
+                        }
+                        else if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON) == true && mousePos.X >= settingsPosMin.X && mousePos.Y >= settingsPosMin.Y && mousePos.X <= settingsPosMax.X && mousePos.Y <= settingsPosMax.Y)
+                        {
+                            select = gameState[3];
                         }
 
 
@@ -76,7 +98,7 @@ namespace Trainline
                         break;
 
                     case "main":
-                        Color timeOfDay = new Color(Cvalue, 230, Cvalue, 150);
+                        timeOfDay = new Color(Cvalue, Cvalue, Cvalue - 60, 150);
                         Raylib.BeginDrawing();
                         if (time < 720)
                         {
@@ -152,11 +174,22 @@ namespace Trainline
 
                         Raylib.EndDrawing();
                         break;
+                    case "settings":
+                        Raylib.BeginDrawing();
+
+                        Raylib.ClearBackground(Color.WHITE);
+
+                        Raylib.DrawCircle(100, 100, 100, Color.BLUE);
+
+                        Raylib.EndDrawing();
+                        break;
                 }
             }
         }
-        void trainmove(Train, Track)
+        void trainmove(Train trainMove, Track trackNow, string tName, int[] tStorage, float tSpeed, int tCost)
         {
+            trainMove = new Train() { name = tName, storage = tStorage, speed = tSpeed, cost = tCost };
+            trackNow = new Track();
 
         }
     }
