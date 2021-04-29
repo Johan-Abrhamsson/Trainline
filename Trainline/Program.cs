@@ -29,19 +29,28 @@ namespace Trainline
         public int x = 0;
         public int y = 0;
         public int order = 0;
+        public Color stopColor = Color.WHITE;
     }
     class Track
     {
         public string name = "";
         public int size = 10;
+        public Random generator = new Random();
+        public Color trackColorMaker(){
+        int r = generator.Next(255);
+        int b = generator.Next(255);
+        int g = generator.Next(255);
 
+        Color trackColor = new Color (r, b, g, 255);
+        return trackColor;
+        }
         private int orderNumber = 0;
         private List<Stop> stopOrder = new List<Stop>();
 
         public Stop OrderAdd(int xStop, int yStop)
         {
             orderNumber++;
-            stopOrder.Add(new Stop { x = xStop, y = yStop, order = orderNumber });
+            stopOrder.Add(new Stop { x = xStop, y = yStop, order = orderNumber, stopColor = trackColorMaker()});
             Stop w = new Stop();
             return w;
         }
