@@ -12,7 +12,6 @@ namespace Trainline
         public int[] storage = new int[0];
 
         public float speed = 0.01f;
-
         public int cost = 0;
     }
     class city
@@ -28,7 +27,6 @@ namespace Trainline
     {
         public int x = 0;
         public int y = 0;
-        public int order = 0;
         public Color stopColor = Color.WHITE;
     }
     class Track
@@ -36,23 +34,20 @@ namespace Trainline
         public string name = "";
         public int size = 10;
         public Random generator = new Random();
-        public Color trackColorMaker(){
-        int r = generator.Next(255);
-        int b = generator.Next(255);
-        int g = generator.Next(255);
-
-        Color trackColor = new Color (r, b, g, 255);
-        return trackColor;
-        }
-        private int orderNumber = 0;
-        private List<Stop> stopOrder = new List<Stop>();
-
-        public Stop OrderAdd(int xStop, int yStop)
+        public Color trackColorMaker()
         {
-            orderNumber++;
-            stopOrder.Add(new Stop { x = xStop, y = yStop, order = orderNumber, stopColor = trackColorMaker()});
-            Stop w = new Stop();
-            return w;
+            int r = generator.Next(255);
+            int b = generator.Next(255);
+            int g = generator.Next(255);
+
+            Color trackColor = new Color(r, b, g, 255);
+            return trackColor;
+        }
+        public List<Stop> stopOrder = new List<Stop>();
+
+        public void OrderAdd(int xStop, int yStop)
+        {
+            stopOrder.Add(new Stop { x = xStop, y = yStop, stopColor = trackColorMaker() });
         }
     }
     class Program
@@ -195,10 +190,18 @@ namespace Trainline
                 }
             }
         }
-        void trainmove(Train trainMove, Track trackNow, string tName, int[] tStorage, float tSpeed, int tCost)
+        void trainmove(Train trainMove, Track trackNow, string tName, int[] tStorage, float tSpeed, int tCost, string trackName, Color trackColor, List<Stop> trackStopOrder)
         {
             trainMove = new Train() { name = tName, storage = tStorage, speed = tSpeed, cost = tCost };
-            trackNow = new Track();
+            trackNow = new Track() { name = trackName, stopOrder = trackStopOrder };
+
+
+            Raylib.BeginDrawing();
+            for (int i = 0; i < trackStopOrder.Count; i++)
+            {
+                Raylib.DrawRectangle(20, 50, trackStopOrder[i].x, trackStopOrder[i].y, Color.BLACK);
+            }
+            Raylib.EndDrawing();
 
         }
     }
