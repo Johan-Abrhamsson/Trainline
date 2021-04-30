@@ -33,15 +33,23 @@ namespace Trainline
     {
         public string name = "";
         public int size = 10;
+
+        private int colorLock = 0;
         public Random generator = new Random();
         public Color trackColorMaker()
         {
+            if (colorLock == 0){
             int r = generator.Next(255);
             int b = generator.Next(255);
             int g = generator.Next(255);
 
             Color trackColor = new Color(r, b, g, 255);
+            colorLock++;
             return trackColor;
+            }
+            else{
+            return Color.BLACK;
+            }
         }
         public List<Stop> stopOrder = new List<Stop>();
 
@@ -182,6 +190,13 @@ namespace Trainline
                         Raylib.BeginDrawing();
 
                         Raylib.ClearBackground(Color.WHITE);
+                        Train Cooltrain = new Train();
+                        Track Traintrack = new Track();
+                        Stop s1 = new Stop() { x = 200, y = 800 };
+                        Stop s2 = new Stop() { x = 150, y = 800 };
+                        Traintrack.OrderAdd(200, 800);
+                        Traintrack.OrderAdd(150, 700);
+                        trainmove(Cooltrain, Traintrack, "Tomoul Train", new int[5], 0.08f, 500, "Tomoul track", Traintrack.trackColorMaker(), Traintrack.stopOrder);
 
                         Raylib.DrawCircle(100, 100, 100, Color.BLUE);
 
@@ -190,18 +205,15 @@ namespace Trainline
                 }
             }
         }
-        void trainmove(Train trainMove, Track trackNow, string tName, int[] tStorage, float tSpeed, int tCost, string trackName, Color trackColor, List<Stop> trackStopOrder)
+        static void trainmove(Train trainMove, Track trackNow, string tName, int[] tStorage, float tSpeed, int tCost, string trackName, Color trackColor, List<Stop> trackStopOrder)
         {
             trainMove = new Train() { name = tName, storage = tStorage, speed = tSpeed, cost = tCost };
             trackNow = new Track() { name = trackName, stopOrder = trackStopOrder };
 
-
-            Raylib.BeginDrawing();
             for (int i = 0; i < trackStopOrder.Count; i++)
             {
-                Raylib.DrawRectangle(20, 50, trackStopOrder[i].x, trackStopOrder[i].y, Color.BLACK);
+                Raylib.DrawRectangle(trackStopOrder[i].x, trackStopOrder[i].y, 20, 50, trackStopOrder[i].stopColor);
             }
-            Raylib.EndDrawing();
 
         }
     }
