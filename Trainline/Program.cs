@@ -13,6 +13,9 @@ namespace Trainline
 
         public float speed = 0.01f;
         public int cost = 0;
+
+        public float x = 0;
+        public float y = 0;
     }
     class city
     {
@@ -23,39 +26,28 @@ namespace Trainline
         private int Pop = 0;
         private int level = 0;
     }
-    class Stop
+    public class Stop
     {
         public int x = 0;
         public int y = 0;
         public Color stopColor = Color.WHITE;
     }
-    class Track
+    public class Track
     {
         public string name = "";
-        public int size = 10;
-
-        private int colorLock = 0;
-        public Random generator = new Random();
-        public Color trackColorMaker()
-        {
-            if (colorLock == 0){
-            int r = generator.Next(255);
-            int b = generator.Next(255);
-            int g = generator.Next(255);
-
-            Color trackColor = new Color(r, b, g, 255);
-            colorLock++;
-            return trackColor;
-            }
-            else{
-            return Color.BLACK;
-            }
-        }
+        public int size = 25;
+        private static Random generator = new Random();
+        public static Color colorLock = new Color(
+        generator.Next(255),
+        generator.Next(255),
+        generator.Next(255),
+        255
+        );
         public List<Stop> stopOrder = new List<Stop>();
 
         public void OrderAdd(int xStop, int yStop)
         {
-            stopOrder.Add(new Stop { x = xStop, y = yStop, stopColor = trackColorMaker() });
+            stopOrder.Add(new Stop { x = xStop, y = yStop, stopColor = colorLock });
         }
     }
     class Program
@@ -192,11 +184,9 @@ namespace Trainline
                         Raylib.ClearBackground(Color.WHITE);
                         Train Cooltrain = new Train();
                         Track Traintrack = new Track();
-                        Stop s1 = new Stop() { x = 200, y = 800 };
-                        Stop s2 = new Stop() { x = 150, y = 800 };
                         Traintrack.OrderAdd(200, 800);
                         Traintrack.OrderAdd(150, 700);
-                        trainmove(Cooltrain, Traintrack, "Tomoul Train", new int[5], 0.08f, 500, "Tomoul track", Traintrack.trackColorMaker(), Traintrack.stopOrder);
+                        trainmove(Cooltrain, Traintrack, "Tomoul Train", new int[5], 0.8f, 500, "Tomoul track", Track.colorLock, Traintrack.stopOrder);
 
                         Raylib.DrawCircle(100, 100, 100, Color.BLUE);
 
@@ -207,14 +197,16 @@ namespace Trainline
         }
         static void trainmove(Train trainMove, Track trackNow, string tName, int[] tStorage, float tSpeed, int tCost, string trackName, Color trackColor, List<Stop> trackStopOrder)
         {
-            trainMove = new Train() { name = tName, storage = tStorage, speed = tSpeed, cost = tCost };
+            trainMove = new Train() { name = tName, storage = tStorage, speed = tSpeed, cost = tCost, x = trackStopOrder[0].x - 25, y = trackStopOrder[0].y - 10 };
             trackNow = new Track() { name = trackName, stopOrder = trackStopOrder };
-
             for (int i = 0; i < trackStopOrder.Count; i++)
             {
-                Raylib.DrawRectangle(trackStopOrder[i].x, trackStopOrder[i].y, 20, 50, trackStopOrder[i].stopColor);
+                Raylib.DrawCircle(trackStopOrder[i].x, trackStopOrder[i].y, trackNow.size, trackStopOrder[i].stopColor);
             }
-
+            Raylib.DrawRectangle((int)trainMove.x, (int)trainMove.y, 50, 20, Color.BLACK);
+            float k = ((trackStopOrder[1].y) - (trainMove.y)) / ((trackStopOrder[1].x) - (trainMove.x));
+            trainMove.y = trainMove.y + trainMove.x * k + tSpeed;
+            trainMove.x = trainMove.x + tSpeed;
         }
     }
 }
