@@ -14,8 +14,7 @@ namespace Trainline
         public float speed = 0.01f;
         public int cost = 0;
 
-        public float x = 0;
-        public float y = 0;
+        public Vector2 xy = new Vector2(0, 0);
     }
     class city
     {
@@ -28,8 +27,7 @@ namespace Trainline
     }
     public class Stop
     {
-        public int x = 0;
-        public int y = 0;
+        public Vector2 xy = new Vector2(0, 0);
         public Color stopColor = Color.WHITE;
     }
     public class Track
@@ -47,7 +45,7 @@ namespace Trainline
 
         public void OrderAdd(int xStop, int yStop)
         {
-            stopOrder.Add(new Stop { x = xStop, y = yStop, stopColor = colorLock });
+            stopOrder.Add(new Stop { xy = new Vector2(xStop, yStop), stopColor = colorLock });
         }
     }
     class Program
@@ -66,12 +64,17 @@ namespace Trainline
             string[] gameState = { "intro", "main", "info", "settings", "win" };
             string select = gameState[0];
             Color timeOfDay = new Color(Cvalue, Cvalue, Cvalue - 60, 150);
+            Track Traintrack = new Track() { name = "Tomoul track" };
+            Traintrack.OrderAdd(100, 200);
+            Traintrack.OrderAdd(950, 700);
+            Train Cooltrain = new Train() { name = "Tomoul Train", storage = new int[5], speed = 2f, cost = 500, xy = new Vector2(Traintrack.stopOrder[0].xy.X - 25, Traintrack.stopOrder[0].xy.Y - 10) };
 
             Raylib.InitWindow(width, height, "Trainline");
             Raylib.SetTargetFPS(30);
 
             while (!Raylib.WindowShouldClose())
             {
+
                 switch (select)
                 {
                     case "intro":
@@ -167,6 +170,7 @@ namespace Trainline
                         }
                         Raylib.DrawFPS(50, 50);
                         Raylib.EndDrawing();
+                        trainmove(Cooltrain, Traintrack);
                         break;
 
                     case "info":
@@ -179,34 +183,30 @@ namespace Trainline
                         Raylib.EndDrawing();
                         break;
                     case "settings":
+
                         Raylib.BeginDrawing();
 
                         Raylib.ClearBackground(Color.WHITE);
-                        Train Cooltrain = new Train();
-                        Track Traintrack = new Track();
-                        Traintrack.OrderAdd(200, 800);
-                        Traintrack.OrderAdd(150, 700);
-                        trainmove(Cooltrain, Traintrack, "Tomoul Train", new int[5], 0.8f, 500, "Tomoul track", Track.colorLock, Traintrack.stopOrder);
-
-                        Raylib.DrawCircle(100, 100, 100, Color.BLUE);
-
+                        int xc = 300;
+                        Raylib.DrawCircle(100, xc, 100, Color.BLUE);
+                        xc = xc + 1;
                         Raylib.EndDrawing();
                         break;
                 }
             }
         }
-        static void trainmove(Train trainMove, Track trackNow, string tName, int[] tStorage, float tSpeed, int tCost, string trackName, Color trackColor, List<Stop> trackStopOrder)
+        static void trainmove(Train trainMove, Track trackNow)
         {
-            trainMove = new Train() { name = tName, storage = tStorage, speed = tSpeed, cost = tCost, x = trackStopOrder[0].x - 25, y = trackStopOrder[0].y - 10 };
-            trackNow = new Track() { name = trackName, stopOrder = trackStopOrder };
-            for (int i = 0; i < trackStopOrder.Count; i++)
+            for (int i = 0; i < trackNow.stopOrder.Count; i++)
             {
-                Raylib.DrawCircle(trackStopOrder[i].x, trackStopOrder[i].y, trackNow.size, trackStopOrder[i].stopColor);
+                Raylib.DrawCircle((int)trackNow.stopOrder[i].xy.X, (int)trackNow.stopOrder[i].xy.Y, trackNow.size, trackNow.stopOrder[i].stopColor);
+            Raylib.DrawRectangle((int)trainMove.xy.X, (int)trainMove.xy.Y, 50, 20, Color.BLACK);
+            Vector2 k = trainMove.xy - trackNow.stopOrder[i].xy;
+
+            Vector2 n = Vector2.Normalize(k);
+
+            n = n * trainMove.speed;
             }
-            Raylib.DrawRectangle((int)trainMove.x, (int)trainMove.y, 50, 20, Color.BLACK);
-            float k = ((trackStopOrder[1].y) - (trainMove.y)) / ((trackStopOrder[1].x) - (trainMove.x));
-            trainMove.y = trainMove.y + trainMove.x * k + tSpeed;
-            trainMove.x = trainMove.x + tSpeed;
         }
     }
 }
