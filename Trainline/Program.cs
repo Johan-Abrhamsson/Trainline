@@ -187,9 +187,7 @@ namespace Trainline
                         Raylib.BeginDrawing();
 
                         Raylib.ClearBackground(Color.WHITE);
-                        int xc = 300;
-                        Raylib.DrawCircle(100, xc, 100, Color.BLUE);
-                        xc = xc + 1;
+                        Raylib.DrawCircle(100, 100, 100, Color.BLUE);
                         Raylib.EndDrawing();
                         break;
                 }
